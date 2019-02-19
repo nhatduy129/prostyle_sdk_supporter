@@ -1,0 +1,6 @@
+framework module DoorMasterSDK {
+  umbrella header "DoorMasterSDK.h"
+
+  export *
+  module * { export * }
+}
