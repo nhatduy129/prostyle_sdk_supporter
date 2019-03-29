@@ -1,5 +1,5 @@
 {
-    "name": "nativescript-toaster-ios",
+    "name": "doormaster-plugin-ios",
         "version": "0.0.1",
             "main": "index.js",
                 "nativescript": {
