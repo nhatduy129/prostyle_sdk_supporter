@@ -1,0 +1,10 @@
+{
+    "name": "nativescript-toaster-ios",
+        "version": "0.0.1",
+            "main": "index.js",
+                "nativescript": {
+        "platforms": {
+            "ios": "5.1.1"
+        }
+    }
+}
