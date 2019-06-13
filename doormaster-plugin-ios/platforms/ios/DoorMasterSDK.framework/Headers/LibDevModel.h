@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import "DMSDK_CallBack.h"
+#import "DMFingerprintModel.h"
 
 #define RESTARTBLENOTIFICATION @"RESTARTBLENOTIFICATION"
 
@@ -105,12 +106,6 @@
  * EN: Start the Bluetooth background mode, lock the screen as usual can open the door
  */
 +(int)startBackgroundModeWithInterval:(int)interval;
-
-/**
- * zh-CN: 启动蓝牙后台模式，只有当亮屏时才可以开门
- * EN: Start the Bluetooth background mode, only when the bright screen can open the door
- */
-+(int)startBackgroundModeWhenBrightScreen;
 
 /**
  * zh-CN: 停止蓝牙后台模式
@@ -315,6 +310,15 @@
 +(int)deleteCardFromDevice:(LibDevModel *)devModel andCards:(NSArray *)cardArray;
 
 /**
+ * 获取设备卡号信息
+ * 说明：获取设备的所有卡号信息
+ * @param devModel： 操作的设备对象
+ * @param progress： 读卡过程的回调，可用于显示进度条
+ * @Param complete： 读卡完成或者其他异常情况时的回调
+ */
++(int)getCardNumbersFromDevice:(LibDevModel *)devModel andProgress:(BlockOnReadCardProgressOver)progress andComplete:(BlockOnReadCardCompleteOver)complete;
+
+/**
  * zh-CN: 获取电子钥匙Identity和来源
  * EN: Get eKey Indentity and resource
  *
@@ -322,5 +326,102 @@
  * return: NSDictionary object：{"resIdentity": @"***", "resource": @"**"}
  */
 +(NSDictionary*)getEkeyIdentityAndResource:(NSString *)eKey;
+/**
+ * zh-CN: 同步指纹信息到设备
+ * EN: Synchronize fingerprint information to the device
+ *
+ * @param fingerPrintModels: fingerprint information
+ * return: int
+ */
++(int)syncFingerPrintToDevice:(LibDevModel *)devModel andFingerprints:(NSMutableArray <DMFingerprintModel *>*)fingerprintModels andProgress:(BlockOnSyncFingerPrintProgressOver)progress andComplete:(BlockOnSyncFingerPrintCompleteOver)complete;
+
+/**
+ * zh-CN: 从设备里获取指纹信息
+ * EN: Get fingerprint information from the device
+ *
+ * return: int
+ */
++(int)getFingerPrintsFromDevice:(LibDevModel *)devModel andProgress:(BlockonReadFingerPrintProgressOver)progress andComplete:(BlockonReadFingerPrintComplete)complete;
+
+/**
+ * 获取设备开门记录（一次性获取全部）
+ * 说明：获取设备的所有开门记录
+ * @param devModel： 操作的设备对象
+ * @param progress： 读记录过程的回调，可用于显示进度条
+ * @Param complete： 读记录完成或者其他异常情况时的回调
+ */
++(int)getOpenDoorRecordFromDevice:(LibDevModel *)devModel andProgress:(BlockonReadOpenDoorRecordProgressOver)progress andComplete:(BlockonReadOpenDoorRecordCompleteOver)complete;
+
+/**
+ * 获取设备未读取的开门记录
+ * 说明：获取设备未读取的开门记录
+ * @param devModel： 操作的设备对象
+ * @param readCount: 调用一次接口读取的最大次数（读取一次最多15条记录），即若readCount为5，则此接口最多读取5次，即最多返回75条记录，若想直接读取完所有未读取过的记录，则readCount设置为0即可
+ * @param progress： 读记录过程的回调，可用于显示进度条
+ * @Param complete： 读记录完成或者其他异常情况时的回调
+ */
++(int)getRecentOpenDoorRecordFromDevice:(LibDevModel *)devModel readCount:(int)readCount andProgress:(BlockonReadOpenDoorRecordProgressOver)progress andComplete:(BlockonReadOpenDoorRecordCompleteOver)complete;
+
+/**
+ * 删除所有开门记录
+ * 说明：删除设备里的所有开门记录
+ * @param devModel： 操作的设备对象
+ * @Param callBack： 删除完成的回调
+ */
++(int)cleanAllOpenDoorRecords:(LibDevModel *)devModel andCallback:(BlockOnControlOver)callBack;
+
+/**
+ * 设置静态ip或DHCP
+ * 说明：设置设备的静态ip（IPV4）或使用DHCP
+ * @param devModel： 操作的设备对象
+ * @param enable：   是否激活静态ip
+ * @param staticIP： 静态ip地址
+ * @param mask：     子网掩码地址
+ * @param gate：     网关地址
+ * @param dns：      dns服务器地址
+ * @Param complete： 回调
+ */
++(int)setDeviceStaticIP:(LibDevModel *)devModel andEnableStaticIP:(BOOL)enable andStaticIP:(NSString *)staticIP andMask:(NSString *)mask andGate:(NSString *)gate andDns:(NSString *)dns andCallback:(BlockOnControlOver)callBack;
+
+/**
+ * 设置服务器IP
+ * 说明：给设备配置其连接的服务器IP
+ * @param devModel：    操作的设备对象
+ * @param serverIP：    服务器IP
+ * @param serverPort：  服务器端口
+ * @Param complete：    回调
+ */
++(int)setServerIP:(LibDevModel *)devModel andServerIP:(NSString *)serverIP andServerPort:(int)serverPort andCallback:(BlockOnControlOver)callBack;
+
+/**
+ * 删除指纹
+ * 说明：删除指定用户ID的指纹数据
+ * @param devModel： 操作的设备对象
+ * @param userIDs：  用户id数组
+ * @Param complete： 删除完成的回调
+ */
++(int)deleteFingerprints:(LibDevModel *)devModel andUserIDs:(NSArray <NSString *>*)userIDs andCallback:(BlockOnControlOver)callBack;
+
+/**
+ * 删除所有指纹
+ * 说明：删除设备里的所有指纹数据
+ * @param devModel： 操作的设备对象
+ * @Param callBack： 删除完成的回调
+ */
++(int)cleanFingerprints:(LibDevModel *)devModel andCallback:(BlockOnControlOver)callBack;
+
+/**
+ * 重启设备（EXT200）
+ * 说明：重启设备
+ * @param devModel： 操作的设备对象
+ * @Param callBack： 操作成功的回调
+ */
++(int)rebootDevice:(LibDevModel *)devModel andCallback:(BlockOnControlOver)callBack;
+
+/**
+ * 获取SDK版本
+ */
++(NSString *)getDoorMasterSDKVersion;
 
 @end
+
